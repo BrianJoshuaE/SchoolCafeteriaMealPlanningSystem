@@ -131,6 +131,8 @@ def collect_records():
 
 def main():
     """Collect records, then generate the weekly cafeteria report."""
+    print("SCHOOL CAFETERIA MEAL PLANNING SYSTEM")
+    print("=" * 40)
     records = collect_records()
     if not records:
         print("No records entered. No report was generated.")
