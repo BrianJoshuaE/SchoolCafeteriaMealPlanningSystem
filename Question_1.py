@@ -8,10 +8,12 @@ def process_records(records):
     student_spending = {}
 
     for name, meal, daily_price in records:
+        # Keep each student's name only once per meal preference.
         meal_to_students.setdefault(meal, [])
         if name not in meal_to_students[meal]:
             meal_to_students[meal].append(name)
 
+        # The cafeteria operates for five days, so convert daily prices first.
         weekly_price = daily_price * 5
         meal_to_revenue[meal] = meal_to_revenue.get(meal, 0) + weekly_price
         student_spending[name] = student_spending.get(name, 0) + weekly_price
@@ -60,6 +62,7 @@ def generate_report(
     total_revenue = 0
     for meal, revenue in meal_to_revenue.items():
         print(f"{meal}: {revenue:,} UGX")
+        # Add each meal's revenue to produce the weekly cafeteria total.
         total_revenue += revenue
     print(f"Total weekly revenue: {total_revenue:,} UGX")
 
@@ -101,6 +104,7 @@ def collect_records():
             print("Meal preference cannot be empty.")
             continue
 
+        # Keep asking until the price is a non-negative whole number.
         while True:
             price_text = input("Daily meal price (UGX): ").strip()
             try:
@@ -116,6 +120,7 @@ def collect_records():
         records.append((name, meal, daily_price))
         print("Record added.\n")
 
+        # Validate the continuation choice before moving to the next record.
         while True:
             add_another = input(
                 "Record another student? (y/n): "
@@ -134,10 +139,12 @@ def main():
     print("SCHOOL CAFETERIA MEAL PLANNING SYSTEM")
     print("=" * 40)
     records = collect_records()
+    # Avoid printing an empty report when no student records were entered.
     if not records:
         print("No records entered. No report was generated.")
         return
 
+    # Build all report data once, then pass it to the presentation function.
     meal_to_students, meal_to_revenue, student_spending = process_records(
         records
     )
